@@ -4,16 +4,16 @@
   <div class='home'>
     <div class="row">
       <div class="col-3">
-        <Card name='danger' title='Back-Log'/>
+        <Backlog :fetchBacklog='backlogs'/>
       </div>
       <div class="col-3">
-        <Card name='warning' title='To-Do'/>
+        <Todo :fetchTodos='todos'/>
       </div>
       <div class="col-3">
-        <Card name='primary' title='Doing'/>
+        <Doing :fetchDoing='doing'/>
       </div>
       <div class="col-3">
-        <Card name='success' title='Done'/>
+        <Done :fetchDone='done'/>
       </div>
     </div>
   </div>
@@ -23,35 +23,107 @@
 <script>
 // @ is an alias to /src
 import Nav from '../components/Nav'
-import Card from '../components/Card'
+import Backlog from '../components/Backlog'
+import Todo from '../components/Todo'
+import Doing from '../components/Doing'
+import Done from '../components/Done'
 import db from '../../config/firebase'
 
 export default {
   name: 'home',
   components: {
     Nav,
-    Card
+    Backlog,
+    Todo,
+    Doing,
+    Done
   },
   data () {
     return {
       name: '',
-      firstData: '',
-      default: false
+      backlogs: '',
+      todos: '',
+      doing: '',
+      done: ''
+
     }
   },
   created () {
-    db.collection('kamvan').get()
-      .then(doc => {
-        console.log(doc.docs[0].data())
-        this.firstData = doc.docs[0].data()
-        this.default = true
+    db.collection('kamvan').where('name', '==', 'backlog')
+      .onSnapshot((querySnapshot) => {
+        let temp = []
+        querySnapshot.forEach((doc) => {
+          let id = doc.id
+          let data = doc.data()
+          data.id = id
+          temp.push(data)
+        })
+        this.backlogs = temp
+      })
+    db.collection('kamvan').where('name', '==', 'todo')
+      .onSnapshot((querySnapshot) => {
+        let temp = []
+        querySnapshot.forEach((doc) => {
+          let id = doc.id
+          let data = doc.data()
+          data.id = id
+          temp.push(data)
+        })
+        this.todos = temp
+      })
+    db.collection('kamvan').where('name', '==', 'doing')
+      .onSnapshot(querySnapshot => {
+        let temp = []
+        querySnapshot.forEach(doc => {
+          let id = doc.id
+          let data = doc.data()
+          data.id = id
+          temp.push(data)
+        })
+        this.doing = temp
+      })
+    db.collection('kamvan').where('name', '==', 'done')
+      .onSnapshot(querySnapshot => {
+        let temp = []
+        querySnapshot.forEach(doc => {
+          let id = doc.id
+          let data = doc.data()
+          data.id = id
+          temp.push(data)
+        })
+        this.done = temp
       })
   },
   watch: {
-    firstData () {
-      if (this.default) {
-        this.name = 'danger'
-      }
+    backlogs (val) {
+      val.forEach(el => {
+        if (el.name !== 'backlog') {
+          db.collection('kamvan').doc(el.id).update({ name: 'backlog' })
+        }
+      })
+    },
+    todos (val) {
+      val.forEach(el => {
+        if (el.name !== 'todo') {
+          db.collection('kamvan').doc(el.id).update({ name: 'todo' })
+        }
+      })
+    },
+    doing (val) {
+      val.forEach(el => {
+        console.log(el)
+        if (el.name !== 'doing') {
+          db.collection('kamvan').doc(el.id).update({ name: 'doing' })
+        }
+      })
+    },
+    done (val) {
+      val.forEach(el => {
+        console.log(el)
+        if (el.name !== 'done') {
+          db.collection('kamvan').doc(el.id).update({ name: 'done' })
+        }
+      })
     }
   }
 }

@@ -10,16 +10,18 @@ firebase.initializeApp({
 
 var db = firebase.firestore()
 
-db.collection('kamvan').add({
-  first: 'Ada',
-  last: 'Lovelace',
-  born: 1815
-})
-  .then(function (docRef) {
-    console.log('Document written with ID: ', docRef.id)
-  })
-  .catch(function (error) {
-    console.error('Error adding document: ', error)
-  })
+// db.collection('todo').add({
+//   assigned: 'Us',
+//   description: 'yes',
+//   point: '50',
+//   status: 'Back Log',
+//   title: 'ini title2'
+// })
+//   .then(function (docRef) {
+//     console.log('Document written with ID: ', docRef.id)
+//   })
+//   .catch(function (error) {
+//     console.error('Error adding document: ', error)
+//   })
 
 module.exports = db
