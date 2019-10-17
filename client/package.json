@@ -14,7 +14,8 @@
     "sweetalert2": "^8.18.4",
     "vue": "^2.6.10",
     "vue-loading-overlay": "^3.2.0",
-    "vue-router": "^3.0.3"
+    "vue-router": "^3.0.3",
+    "vuedraggable": "^2.23.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.0",
