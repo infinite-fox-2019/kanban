@@ -4,7 +4,6 @@
         header="Done"
         header-text-variant="white"
         header-tag="header"
-        header-bg-variant="success"
         title="Title"
         style="max-width: 20rem;"
     >
@@ -21,5 +20,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.card-header {
+  background-color: #384065;
+}
 </style>

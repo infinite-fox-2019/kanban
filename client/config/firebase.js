@@ -1,6 +1,6 @@
-const firebase = require("firebase");
+const firebase = require("firebase/app")
 // Required for side-effects
-require("firebase/firestore");
+
 
 firebase.initializeApp({
     apiKey: process.env.VUE_APP_API_KEY,
