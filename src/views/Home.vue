@@ -1,6 +1,11 @@
 <template>
+<<<<<<< HEAD
   <div id="home">
     <NavBar @Data='submitdata'></NavBar>
+=======
+  <div class="home">
+    <NavBar></NavBar>
+>>>>>>> d2dd9f3d457e90cc7507aa0b24c51c80b2a464f2
     <TaskList></TaskList>
   </div>
 </template>
@@ -36,8 +41,11 @@ export default {
   }
 }
 </script>
+<<<<<<< HEAD
 <style>
 #home {
   background-color: aqua;
   }
 </style>
+=======
+>>>>>>> d2dd9f3d457e90cc7507aa0b24c51c80b2a464f2
