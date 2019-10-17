@@ -61,7 +61,7 @@ export default {
             doneArr.push(el)
           }
         })
-        console.log(doneArr)
+        // console.log(doneArr)
         this.kanbans.backLog.datas = backArr
         this.kanbans.todo.datas = todoArr
         this.kanbans.done.datas = doneArr
@@ -71,8 +71,8 @@ export default {
     createKanban (input) {
       db.collection('kanban').add(input)
         .then(response => {
-          console.log(response)
-          console.log(response.data)
+          // console.log(response)
+          // console.log(response.data)
         })
         .catch((err) => {
           console.log(err)

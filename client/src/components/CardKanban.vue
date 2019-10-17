@@ -2,7 +2,7 @@
   <div class="card">
     <div class="close">
       <v-btn text small>
-      <v-icon style="color: white" @click="deleteMe">fa-times</v-icon>
+        <v-icon style="color: white" @click="deleteMe">fa-times</v-icon>
       </v-btn>
     </div>
     <div>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 // import db from '../api/firebase.js'
 import db from '@/api/firestore'
 export default {
@@ -74,19 +75,57 @@ export default {
     },
     changeThis (input) {
       let { id, status } = input
-      console.log(id)
-      db.collection('kanban').doc(id).update({
-        status
-      })
+      // console.log(id);
+      db.collection('kanban')
+        .doc(id)
+        .update({
+          status
+        })
         .then(response => {
-          console.log(response)
-          console.log(response.data)
+          // console.log(response);
+          // console.log(response.data);
         })
     },
     deleteMe () {
-      db.collection('kanban').doc(this.id).delete().then(response => {
-        console.log(response.data)
+      Swal.fire({
+        html: `<p>This will be deleted immediately you can't undo</p>`,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#8D249E',
+        cancelButtonColor: '#EC366F',
+        confirmButtonText: 'Delete it!'
       })
+        .then(result => {
+          if (result.value === true) {
+            db.collection('kanban')
+              .doc(this.id)
+              .delete()
+              .then(response => {
+                Swal.fire({
+                  html: '<p>Success Delete</p>',
+                  type: 'success',
+                  confirmButtonColor: '#9C28B0',
+                  animation: false,
+                  customClass: {
+                    popup: 'animated bounce'
+                  }
+                })
+              })
+          } else if (result.dismiss === 'cancel') {
+            Swal.fire({
+              html: '<p>Cancel Deletion</p>',
+              type: 'info',
+              confirmButtonColor: '#9C28B0',
+              animation: false,
+              customClass: {
+                popup: 'animated bounce'
+              }
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
@@ -105,7 +144,7 @@ export default {
   background: rgb(92, 86, 86);
   display: flex;
   justify-content: flex-end;
-  align-items: center
+  align-items: center;
 }
 p {
   text-align: center;

@@ -7,7 +7,7 @@
       <v-toolbar-title class="white--text font-weight-bold"></v-toolbar-title>
     </v-toolbar>
     <v-card-text>
-      <div v-for="data in datas" :key="data.title">
+      <div v-for="data in datas" :key="data.id">
         <card-kanban :title="data.title" :id="data.id"
         :description="data.description"
         :status="data.status" :assignTo="data.assignTo"

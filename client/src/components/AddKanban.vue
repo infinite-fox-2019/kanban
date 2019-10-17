@@ -18,19 +18,19 @@
     <v-dialog v-model="dialog" width="500px" height="500px">
       <v-card height="100%" width="100%" style="padding:9%">
         <v-row justify="center" height="100%">
-          <v-card-title>
+          <v-card-title  class="mtb">
             <h2 class="headline">Add New Task</h2>
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-form>
-                <v-col>
+              <v-form @submit.prevent="createKanban">
+                <v-col class="mtb">
                   <v-text-field label="Title" color="purple darken-2" v-model="title"></v-text-field>
                 </v-col>
-                <v-col>
+                <v-col class="mtb">
                   <v-text-field label="Description" color="purple darken-2" v-model="description"></v-text-field>
                 </v-col>
-                <v-col>
+                <v-col class="mtb">
                   <v-text-field label="Assign to" color="purple darken-2" v-model="assignTo"></v-text-field>
                 </v-col>
               </v-form>
@@ -73,13 +73,27 @@ export default {
         this.dialog = false
       } else {
         Swal.fire({
-          html: "<p>Don't Accept Empty Input</p>",
+          html: "<p>We Don't Accept Empty Input</p>",
           confirmButtonColor: '#9C28B0',
           animation: false,
           customClass: {
             popup: 'animated heartBeat'
           }
         })
+      }
+      this.title = ''
+      this.description = ''
+      this.description = ''
+      this.assignTo = ''
+    }
+  },
+  watch: {
+    dialog () {
+      if (!this.dialog) {
+        this.title = ''
+        this.description = ''
+        this.description = ''
+        this.assignTo = ''
       }
     }
   }
@@ -155,5 +169,11 @@ img {
 
 .swal2-content {
   font-family: 'Ubuntu', sans-serif !important
+}
+
+.mtb{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px;
 }
 </style>
