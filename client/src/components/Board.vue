@@ -1,29 +1,21 @@
 <template>
   <div class="container">
     <div class="notification">
-      <slot class="board-name" name="board-name"></slot>
-      <draggable class="list-group" :list="list" group="people" @change="log">
+      <slot class="list-group board-name" name="board-name" group="people" @change="log"></slot>
+      <draggable :list="list" @change="log">
         <div
           class="list-group-item"
           v-for="(element, index) in list"
           :key="element.name"
         >
-          <Task :name="element.name" :order="index"></Task>
+          <Task :name="element.name" :point="element.point" :assignedTo="element.assignedTo" :order="index"></Task>
         </div>
       </draggable>
       <div class="form-add-container">
-        <div @click="setShowAdd">
+        <div @click="setShowAdd" class="add-task-clickable">
           Add a task...
         </div>
-        <div v-if="showAdd">
-          <form @submit.prevent="add">
-            <input v-model="newTaskName" class="input" type="text" placeholder="Task name">
-            <button class="button add-button">
-              <i class="fa fa-plus">
-              </i>
-            </button>
-          </form>
-        </div>
+        <TaskForm v-if="showAdd" @addtask="add"></TaskForm>
       </div>
     </div>
   </div>
@@ -31,6 +23,8 @@
 <script>
 import draggable from '../../node_modules/vuedraggable'
 import Task from './Task.vue'
+import TaskForm from './TaskForm'
+// import db from '../config/firestore'
 
 export default {
   name: 'board',
@@ -38,23 +32,25 @@ export default {
   order: 1,
   components: {
     draggable,
-    Task
+    Task,
+    TaskForm
   },
   data () {
     return {
       list: [],
-      newTaskName: '',
       showAdd: false
     }
   },
+  props: {
+    boardName: String
+  },
   methods: {
-    add: function () {
-      this.list.push({ name: this.newTaskName })
+    add (payload) {
+      this.list.push(payload)
       this.showAdd = false
-      this.newTaskName = ''
     },
     setShowAdd: function () {
-      this.showAdd = true
+      this.showAdd = !this.showAdd
     },
     replace: function () {
       this.list = [{ name: 'Edgard' }]
@@ -66,6 +62,31 @@ export default {
     },
     log: function (evt) {
       window.console.log(evt)
+    },
+    populateList () {
+      // let docRef = db.collection('boards').doc(this.boardName)
+      // docRef.onSnapshot(doc => {
+      //   this.list = doc.data().tasks
+      // })
+    },
+    updateList () {
+      // db.collection('boards').doc(this.boardName).set({
+      //   tasks: this.list
+      // })
+      //   .then(function () {
+      //     console.log('Document successfully written!')
+      //   })
+      //   .catch(function (error) {
+      //     console.error('Error writing document: ', error)
+      //   })
+    }
+  },
+  created () {
+    this.populateList()
+  },
+  watch: {
+    list () {
+      this.updateList()
     }
   }
 }
@@ -83,16 +104,7 @@ export default {
 .form-add-container div {
   margin-top: 8px;
 }
-.add-button {
-  float: right;
-  background-color: #1F2940;
-  border: none;
-  color: white;
-}
-.add-button:hover {
-  float: right;
-  background-color: #1F2940;
-  border: none;
-  color: rgb(223, 223, 223);
+.add-task-clickable {
+  cursor: pointer;
 }
 </style>

@@ -1,7 +1,17 @@
 <template>
   <div class="container">
     <div class="notification">
-      {{ order }} {{ name }}
+      <div class="info-container">
+        <div class="info-item">
+          <strong>{{ name }}</strong>
+        </div>
+        <div class="info-item">
+          <small>{{ point }}</small>
+        </div>
+        <div class="info-item">
+          to: {{ assignedTo }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -10,7 +20,9 @@
 export default {
   props: {
     order: Number,
-    name: String
+    name: String,
+    point: String,
+    assignedTo: String
   }
 }
 </script>
@@ -22,5 +34,11 @@ export default {
 
 .notification {
   background: #33446b;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 </style>

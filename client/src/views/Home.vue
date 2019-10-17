@@ -1,37 +1,10 @@
 <template>
   <div class="home columns">
-    <div class="column">
-      <Board>
+    <div v-for="board in boards" :key="board.id" class="column is-one-quarter">
+      <Board :boardName="board.name">
         <div slot="board-name">
-          <div class="notification backlog-header">
-            Backlog
-          </div>
-        </div>
-      </Board>
-    </div>
-    <div class="column">
-      <Board>
-        <div slot="board-name">
-          <div class="notification todo-header">
-            To-Do
-          </div>
-        </div>
-      </Board>
-    </div>
-    <div class="column">
-      <Board>
-        <div slot="board-name">
-          <div class="notification doing-header">
-            Doing
-          </div>
-        </div>
-      </Board>
-    </div>
-    <div class="column">
-      <Board>
-        <div slot="board-name">
-          <div class="notification done-header">
-            Done
+          <div :class="`notification ${board.name}-header`">
+            {{ board.formattedName }}
           </div>
         </div>
       </Board>
@@ -41,40 +14,38 @@
 
 <script>
 // @ is an alias to /src
-import db from '../config/firestore'
 import Board from '../components/Board'
 
 export default {
   name: 'home',
-  components: {
-    Board
-  },
-  methods: {
-    addUser () {
-      console.log('masuk add user')
-      db.collection('users').add({
-        first: 'Ada',
-        last: 'Lovelace',
-        born: 1815
-      })
-        .then(function (docRef) {
-          console.log('Document written with ID: ', docRef.id)
-        })
-        .catch(function (error) {
-          console.error('Error adding document: ', error)
-        })
-    },
-    getUsers () {
-      db.collection('users').get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            console.log(doc.data())
-          })
-        })
+  data () {
+    return {
+      boards: [
+        {
+          id: 1,
+          name: 'backlog',
+          formattedName: 'Backlog'
+        },
+        {
+          id: 2,
+          name: 'todo',
+          formattedName: 'To-Do'
+        },
+        {
+          id: 3,
+          name: 'doing',
+          formattedName: 'Doing'
+        },
+        {
+          id: 4,
+          name: 'done',
+          formattedName: 'Done'
+        }
+      ]
     }
   },
-  created () {
-    this.getUsers()
+  components: {
+    Board
   }
 }
 </script>
