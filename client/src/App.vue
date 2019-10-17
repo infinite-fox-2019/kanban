@@ -1,41 +1,71 @@
 <template>
-<div>
-  <v-app>
-    <div>
-    <AddKanban @addKanban="createKanban"></AddKanban>
-    </div>
-    <v-flex class="setBoard">
-      <div v-for="kanban in kanbans" :key="kanban.header" >
-        <KanbanBox :header="kanban.header" :color="kanban.color"  :datas="kanban.datas">
-        </KanbanBox>
+  <div>
+    <v-app>
+      <loading
+        :active.sync="isLoading"
+        color="#b93281"
+        :height="185"
+        :width="210"
+        :can-cancel="false"
+        loader="bars"
+      ></loading>
+      <div>
+        <AddKanban @addKanban="createKanban"></AddKanban>
       </div>
-    </v-flex>
-  </v-app>
-</div>
+      <p class="announce">
+        <i class="fas fa-info-circle"></i> <b> Click</b> or <b>drag</b> to change status of kanban
+      </p>
+      <v-flex class="setBoard">
+        <div v-for="kanban in kanbans" :key="kanban.header">
+          <KanbanBox
+            :header="kanban.header"
+            :color="kanban.color"
+            :datas="kanban.datas"
+            :status="kanban.status"
+            @changeStatus="changeStatus"
+          ></KanbanBox>
+        </div>
+      </v-flex>
+    </v-app>
+  </div>
 </template>
 
 <script>
 import AddKanban from '../src/components/AddKanban.vue'
 import KanbanBox from './components/KanbanBox.vue'
-// import db from '@/api/firebase'
 import db from '@/api/firestore'
 
 export default {
   name: 'App',
   components: {
-    AddKanban, KanbanBox
+    AddKanban,
+    KanbanBox
   },
-  data: () => ({
-    page: 'home',
-    kanbans: {
-      backLog: { header: 'Back Log', color: '#cc6889', datas: [] },
-      todo: { header: 'Todo', color: '#A1004B', datas: [] },
-      inProgress: { header: 'In Progress', color: '#b74998', datas: [] },
-      done: { header: 'Done', color: '#ad1b84', datas: [] }
+  data () {
+    return {
+      isLoading: false,
+      page: 'home',
+      kanbans: {
+        backLog: {
+          header: 'Back Log',
+          color: '#cc6889',
+          datas: [],
+          status: 'back-log'
+        },
+        todo: { header: 'Todo', color: '#A1004B', datas: [], status: 'todo' },
+        inProgress: {
+          header: 'In Progress',
+          color: '#b74998',
+          datas: [],
+          status: 'in-progress'
+        },
+        done: { header: 'Done', color: '#ad1b84', datas: [], status: 'done' }
+      }
     }
-  }),
+  },
   methods: {
     getKanban () {
+      this.isLoading = true
       db.collection('kanban').onSnapshot(querySnapshot => {
         let sortKanban = []
         let doneArr = []
@@ -61,22 +91,31 @@ export default {
             doneArr.push(el)
           }
         })
-        // console.log(doneArr)
         this.kanbans.backLog.datas = backArr
         this.kanbans.todo.datas = todoArr
         this.kanbans.done.datas = doneArr
         this.kanbans.inProgress.datas = inproArr
+        this.isLoading = false
       })
     },
     createKanban (input) {
-      db.collection('kanban').add(input)
-        .then(response => {
-          // console.log(response)
-          // console.log(response.data)
-        })
-        .catch((err) => {
+      db.collection('kanban')
+        .add(input)
+        .then(response => {})
+        .catch(err => {
           console.log(err)
         })
+    },
+    changeStatus (payload) {
+      db.collection('kanban')
+        .doc(payload.id)
+        .update({
+          status: payload.toStatus
+        })
+        .then(data => {
+          // console.log("updated");
+        })
+        .catch(console.log)
     }
   },
   created () {
@@ -85,13 +124,19 @@ export default {
 }
 </script>
 <style>
-  .setBoard{
-    display: flex;
-    padding-top: 30px;
-    padding-left: 3px;
-  }
+.announce {
+  left: 45px;
+  top: 70px;
+  font-size: 11pt;
+  position: absolute;
+  color: #5C5656
+}
+.setBoard {
+  display: flex;
+  padding-left: 3px;
+  padding-top: 55px;
+}
 </style>
 
 <style>
-
 </style>

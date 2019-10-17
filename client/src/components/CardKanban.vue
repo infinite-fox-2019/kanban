@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <div class="close">
-      <v-btn text small>
-        <v-icon style="color: white" @click="deleteMe">fa-times</v-icon>
+      <v-btn text small  @click="deleteMe">
+        <v-icon style="color: white">fa-times</v-icon>
       </v-btn>
     </div>
     <div>
@@ -137,6 +137,7 @@ export default {
   min-height: 145px;
   border: 1.5px solid rgb(92, 80, 80);
   margin-bottom: 30px;
+  background: white
 }
 .close {
   width: 248px;

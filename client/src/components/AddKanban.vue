@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app dense fixed height="62px" color="#f24d7e" dark>
-    <v-toolbar-title id="title-navbar" class="ml-2">
+    <v-toolbar-title id="title-navbar" class="ml-6">
       <h3>Kanban</h3>
     </v-toolbar-title>
     <div id="corner-triangle">
@@ -137,6 +137,7 @@ div#corner-triangle .corner-triangle-text {
 }
 
 div#corner-triangle .corner-triangle-text a {
+
   color: white;
 }
 
@@ -167,13 +168,13 @@ img {
   color: rgb(185, 50, 129);
 }
 
-.swal2-content {
-  font-family: 'Ubuntu', sans-serif !important
-}
-
 .mtb{
   margin-top: 5px;
   margin-bottom: 5px;
   padding: 5px;
+}
+
+h3{
+  font-size: 22pt
 }
 </style>
