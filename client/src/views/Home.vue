@@ -8,7 +8,7 @@
           </div>
         </template>
         <template v-slot:body>
-          <Card v-for="task in test" :key="task.id" :task="task.data"/>
+          <Card v-for="task in backLog" :key="task.id" :task="task" @deleteTask="deleteTask" @updateStatus="updateStatus"/>
         </template>
       </Category>
     </div>
@@ -20,7 +20,7 @@
           </div>
         </template>
         <template v-slot:body>
-          <Card v-for="task in tasks" :key="task.id" :task="task.data"/>
+          <Card v-for="task in toDo" :key="task.id" :task="task" @deleteTask="deleteTask" @updateStatus="updateStatus"/>
         </template>
       </Category>
     </div>
@@ -32,7 +32,7 @@
           </div>
         </template>
         <template v-slot:body>
-          <Card v-for="task in tasks" :key="task.id" :task="task.data"/>
+          <Card v-for="task in doing" :key="task.id" :task="task" @deleteTask="deleteTask" @updateStatus="updateStatus"/>
         </template>
       </Category>
     </div>
@@ -44,7 +44,7 @@
           </div>
         </template>
         <template v-slot:body>
-          <Card v-for="task in tasks" :key="task.id" :task="task.data"/>
+          <Card v-for="task in done" :key="task.id" :task="task" @deleteTask="deleteTask" @updateStatus="updateStatus"/>
         </template>
       </Category>
     </div>
@@ -62,72 +62,87 @@ export default {
   name: 'home',
   components: {
     Category,
-    Card,
+    Card
   },
-  data(){
-    return{
+  data () {
+    return {
       tasks: [],
-      test: []
+      backLog: [],
+      toDo: [],
+      doing: [],
+      done: []
     }
   },
-  created(){
-    db.collection("tasks")
+  created () {
+    db.collection('tasks')
       .onSnapshot((tasks) => {
         let allTasks = []
-        tasks.forEach(task=>{
+        tasks.forEach(task => {
           let obj = {}
           obj.id = task.id
           obj.data = task.data()
           allTasks.push(obj)
         })
         this.tasks = allTasks
-        this.testSaja()
-      });
-  },
-  methods:{
-    testSaja(){
-      const test= []
-      
-      this.tasks.forEach(task=>{
-        if(task.data.title == 'yesbenar'){
-          test.push(task)
-        }
+        this.backLogMethod()
+        this.toDoMethod()
+        this.doingMethod()
+        this.doneMethod()
       })
-      this.test = test
-      console.log(this.test);
-      
+  },
+  methods: {
+    deleteTask (id) {
+      db.collection('tasks').doc(id).delete()
+        .then(function () {
+          console.log('Document successfully deleted!')
+        })
+        .catch(function (error) {
+          console.error('Error removing document: ', error)
+        })
     },
-    backLog(){
+    updateStatus (id, status) {
+      db.collection('tasks').doc(id).update('status', status)
+        .then(function () {
+        })
+        .catch(function (error) {
+          console.error('Error removing document: ', error)
+        })
+    },
+    backLogMethod () {
       const backLog = []
-      this.tasks.forEach(task=>{
-        if(task.status == 'backLog'){
+      this.tasks.forEach(task => {
+        if (task.data.status == 'backLog') {
           backLog.push(task)
         }
       })
+      this.backLog = backLog
     },
-    toDo(){
+    toDoMethod () {
       const toDo = []
-      this.tasks.forEach(task=>{
-        if(task.status == 'toDo'){
+      this.tasks.forEach(task => {
+        if (task.data.status == 'toDo') {
           toDo.push(task)
         }
       })
+      this.toDo = toDo
     },
-    doing(){
+    doingMethod () {
       const doing = []
-      this.tasks.forEach(task=>{
-        if(task.status == 'doing'){
+      this.tasks.forEach(task => {
+        if (task.data.status == 'doing') {
           doing.push(task)
         }
       })
+      this.doing = doing
     },
-    done(){
+    doneMethod () {
       const done = []
-      this.tasks.forEach(task=>{
-        if(task.status == 'done'){
+      this.tasks.forEach(task => {
+        if (task.data.status == 'done') {
           done.push(task)
         }
       })
+      this.done = done
     }
   }
 }

@@ -37,26 +37,28 @@ import FormAdd from '@/components/FormAdd.vue'
 import db from '../configs/firestore'
 
 export default {
-  components:{
+  components: {
     FormAdd
   },
-  data(){
-    return{
-      title : '',
-      description : '',
+  data () {
+    return {
+      title: '',
+      description: '',
       score: '',
       assignedTo: '',
       controll: false
     }
   },
-  methods:{
-    createTask(){
-      if(!this.title || !this.description || !this.score || !this.assignedTo){
-        swal("Empty Input Detected", "Please fill everything before add", "error");
+  methods: {
+    createTask () {
+      if (!this.title || !this.description || !this.score || !this.assignedTo) {
+        swal('Empty Input Detected', 'Please fill everything before add', 'error')
       }
-      else{
+      if (this.title.length < 6) {
+        swal('Error Title minimum', 'Title minimum length is 6', 'error')
+      } else {
         this.controll = true
-        db.collection("tasks").add({
+        db.collection('tasks').add({
           title: this.title,
           description: this.description,
           score: this.score,
@@ -65,15 +67,15 @@ export default {
         })
           .then((docRef) => {
             this.controll = false
-            console.log("Document written with ID: ", docRef.id);
+            console.log('Document written with ID: ', docRef.id)
           })
           .catch((error) => {
             this.controll = true
-            console.error("Error adding document: ", error);
-          });
+            console.error('Error adding document: ', error)
+          })
       }
     },
-    updateInput(obj){
+    updateInput (obj) {
       this.title = obj.title,
       this.description = obj.description,
       this.score = obj.score,

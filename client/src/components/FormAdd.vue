@@ -62,10 +62,10 @@
 <script>
 export default {
   computed: {
-    state() {
-      return this.title.length >= 6 ? true : false
+    state () {
+      return this.title.length >= 6
     },
-    invalidFeedback() {
+    invalidFeedback () {
       if (this.title.length > 6) {
         return ''
       } else if (this.title.length > 0) {
@@ -74,16 +74,16 @@ export default {
         return 'Please enter something'
       }
     },
-    validFeedback() {
+    validFeedback () {
       return this.state === true ? 'Thank you' : ''
     }
   },
   props: {
-    controll:{
-      type:Boolean
+    controll: {
+      type: Boolean
     }
   },
-  data() {
+  data () {
     return {
       title: '',
       description: '',
@@ -91,16 +91,16 @@ export default {
       assignedTo: ''
     }
   },
-  watch:{
-    controll(){
-      if(this.controll == true){
+  watch: {
+    controll () {
+      if (this.controll == true) {
         this.title = ''
         this.description = '',
         this.score = '',
         this.assignedTo = ''
       }
     },
-    title(){
+    title () {
       const obj = {
         title: this.title,
         description: this.description,
@@ -109,7 +109,7 @@ export default {
       }
       this.$emit('updateInput', obj)
     },
-    description(){
+    description () {
       const obj = {
         title: this.title,
         description: this.description,
@@ -118,7 +118,7 @@ export default {
       }
       this.$emit('updateInput', obj)
     },
-    score(){
+    score () {
       const obj = {
         title: this.title,
         description: this.description,
@@ -127,7 +127,7 @@ export default {
       }
       this.$emit('updateInput', obj)
     },
-    assignedTo(){
+    assignedTo () {
       const obj = {
         title: this.title,
         description: this.description,

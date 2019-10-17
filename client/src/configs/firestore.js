@@ -1,5 +1,5 @@
 const firebase = require('./firebase')
 
-var db = firebase.firestore();
+var db = firebase.firestore()
 
 module.exports = db
