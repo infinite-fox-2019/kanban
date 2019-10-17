@@ -1,4 +1,5 @@
-# The Reactive Kanban
+# The Reactive Kanban with vue
+See the app [live](https://dipadanakanban.firebaseapp.com/)!
 
 ## Project setup
 ```
