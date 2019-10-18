@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="notification">
-      <slot class="list-group board-name" name="board-name" group="people" @change="log"></slot>
-      <draggable :list="list" @change="log">
+      <slot class="board-name" name="board-name"></slot>
+      <draggable class="list-group" :list="list" group="people">
         <div
           class="list-group-item"
           v-for="(element, index) in list"
           :key="element.name"
         >
-          <Task :name="element.name" :point="element.point" :assignedTo="element.assignedTo" :order="index"></Task>
+          <Task :name="element.name" :point="element.point" :assignedTo="element.assignedTo" :order="index" @deleteTask="deleteTask"></Task>
         </div>
       </draggable>
       <div class="form-add-container">
@@ -24,7 +24,7 @@
 import draggable from '../../node_modules/vuedraggable'
 import Task from './Task.vue'
 import TaskForm from './TaskForm'
-// import db from '../config/firestore'
+import db from '../config/firestore'
 
 export default {
   name: 'board',
@@ -46,39 +46,30 @@ export default {
   },
   methods: {
     add (payload) {
-      this.list.push(payload)
-      this.showAdd = false
+      let hasEmpty = false
+      for (let field in payload) {
+        if (!payload[field]) {
+          hasEmpty = true
+        }
+      }
+      if (!hasEmpty) {
+        this.list.push(payload)
+        this.showAdd = false
+      }
+    },
+    deleteTask (index) {
+      this.list.splice(index, 1)
     },
     setShowAdd: function () {
       this.showAdd = !this.showAdd
     },
-    replace: function () {
-      this.list = [{ name: 'Edgard' }]
-    },
-    clone: function (el) {
-      return {
-        name: el.name + ' cloned'
-      }
-    },
-    log: function (evt) {
-      window.console.log(evt)
-    },
     populateList () {
-      // let docRef = db.collection('boards').doc(this.boardName)
-      // docRef.onSnapshot(doc => {
-      //   this.list = doc.data().tasks
-      // })
-    },
-    updateList () {
-      // db.collection('boards').doc(this.boardName).set({
-      //   tasks: this.list
-      // })
-      //   .then(function () {
-      //     console.log('Document successfully written!')
-      //   })
-      //   .catch(function (error) {
-      //     console.error('Error writing document: ', error)
-      //   })
+      let docRef = db.collection('boards').doc(this.boardName)
+      docRef.onSnapshot(doc => {
+        if (JSON.stringify(this.list) !== JSON.stringify(doc.data().tasks)) {
+          this.list = doc.data().tasks
+        }
+      })
     }
   },
   created () {
@@ -86,7 +77,12 @@ export default {
   },
   watch: {
     list () {
-      this.updateList()
+      db.collection('boards').doc(this.boardName).set({
+        tasks: this.list
+      })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
     }
   }
 }

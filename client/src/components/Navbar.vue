@@ -1,14 +1,14 @@
 <template>
-    <b-navbar class="navbar">
-        <template slot="brand">
-            <b-navbar-item tag="router-link" :to="{ path: '/' }">
-                <div class="icons8-falcon"></div>
-                <div class="app-name">
-                PEREGRINE
-                </div>
-            </b-navbar-item>
-        </template>
-    </b-navbar>
+    <div class="navbar">
+      <div class="rows">
+        <div class="row">
+          <div class="icons8-falcon"></div>
+        </div>
+        <div class="app-name row">
+          PEREGRINE
+        </div>
+      </div>
+    </div>
 </template>
 
 <style scoped>
@@ -29,5 +29,13 @@
   font-family: 'Bree Serif', serif;
   font-size: 18px;
   color: rgb(241, 241, 241);
+}
+.rows {
+  display: flex;
+  margin-left: 10px;
+}
+.row {
+  margin-top: 10px;
+  cursor: pointer;
 }
 </style>
