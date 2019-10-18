@@ -8,57 +8,22 @@
 
       <b-row>
 
-        <b-col md="3" class="mb-3">
-          <b-card bg-variant="danger" text-variant="white" header="Back-Log" class="text-center">
-            <draggable :list="list1" group="kanban">
+        <CardPlace :dataArray="masterData.list1" :variant="'danger'" :header="'Back-log'">
+          <Card v-for="(data,index) in masterData.list1" :key="index" :data="data"></Card>
+        </CardPlace>
 
-              <b-card v-for="(data, index) in list1" :key="index" style="color:black" :header="data.title" class="text-center mb-3">
-                <b-card-text>{{data.description}}</b-card-text>
-                <b-button variant="danger"  @click.prevent="deleteData(data.id)">Delete</b-button>
-              </b-card>
+        <CardPlace :dataArray="masterData.list2" :variant="'warning'" :header="'To-Do'">
+          <Card v-for="(data2,index2) in masterData.list2" :key="index2" :data="data2"></Card>
+        </CardPlace>
 
-            </draggable>
-          </b-card>
-        </b-col>
+        <CardPlace :dataArray="masterData.list3" :variant="'primary'" :header="'Doing'">
+          <Card v-for="(data3,index3) in masterData.list3" :key="index3" :data="data3"></Card>
+        </CardPlace>
 
-        <b-col md="3" class="mb-3">
-          <b-card bg-variant="warning" text-variant="white" header="To-Do" class="text-center">
-            <draggable :list="list2"  group="kanban">
+        <CardPlace :dataArray="masterData.list4" :variant="'success'" :header="'Done'">
+          <Card v-for="(data4,index4) in masterData.list4" :key="index4" :data="data4"></Card>
+        </CardPlace>
 
-              <b-card v-for="(data, index) in list2" :key="index" style="color:black" :header="data.title" class="text-center mb-3">
-                <b-card-text>{{data.description}}</b-card-text>
-                <b-button variant="danger" @click.prevent="deleteData(data.id)">Delete</b-button>
-              </b-card>
-
-            </draggable>
-          </b-card>
-        </b-col>
-
-        <b-col md="3" class="mb-3">
-          <b-card bg-variant="primary" text-variant="white" header="Doing" class="text-center">
-            <draggable :list="list3"  group="kanban">
-
-              <b-card v-for="(data, index) in list3" :key="index" style="color:black" :header="data.title" class="text-center mb-3">
-                <b-card-text>{{data.description}}</b-card-text>
-                <b-button variant="danger" @click.prevent="deleteData(data.id)">Delete</b-button>
-              </b-card>
-
-            </draggable>
-          </b-card>
-        </b-col>
-
-        <b-col md="3" class="mb-3">
-          <b-card bg-variant="success" text-variant="white" header="Done" class="text-center">
-            <draggable :list="list4"  group="kanban">
-
-              <b-card v-for="(data, index) in list4" :key="index" style="color:black" :header="data.title" class="text-center mb-3">
-                <b-card-text>{{data.description}}</b-card-text>
-                <b-button variant="danger" @click.prevent="deleteData(data.id)">Delete</b-button>
-              </b-card>
-
-            </draggable>
-          </b-card>
-        </b-col>
 
       </b-row>
     </b-container>
@@ -66,7 +31,8 @@
 </template>
 
 <script>
-// import CardPlace from '@/components/CardPlace.vue'
+import CardPlace from '@/components/CardPlace.vue'
+import Card from '@/components/Card.vue'
 import draggable from 'vuedraggable'
 import Navbar from '@/components/Navbar.vue'
 import Swal from 'sweetalert2'
@@ -77,14 +43,18 @@ export default {
   name: 'kanban',
   components: {
     draggable,
-    Navbar
+    Navbar,
+    Card,
+    CardPlace
   },
   data () {
     return {
-      list1: [],
-      list2: [],
-      list3: [],
-      list4: []
+      masterData:{
+        list1: [],
+        list2: [],
+        list3: [],
+        list4: []
+      }
     }
   },
   methods: {
@@ -135,22 +105,22 @@ export default {
     fetchData () {
       Swal.showLoading()
       task.orderBy('createdAt', 'desc').onSnapshot((doc) => {
-        this.list1 = []
-        this.list2 = []
-        this.list3 = []
-        this.list4 = []
+        this.masterData.list1 = []
+        this.masterData.list2 = []
+        this.masterData.list3 = []
+        this.masterData.list4 = []
         doc.docs.forEach(el => {
           let id = el.id
           let data = el.data()
           data.id = id
           if (el.data().status === 'backlog') {
-            this.list1.push(data)
+            this.masterData.list1.push(data)
           } else if (el.data().status === 'todo') {
-            this.list2.push(data)
+            this.masterData.list2.push(data)
           } else if (el.data().status === 'doing') {
-            this.list3.push(data)
+            this.masterData.list3.push(data)
           } else if (el.data().status === 'done') {
-            this.list4.push(data)
+            this.masterData.list4.push(data)
           }
           Swal.close()
         })
@@ -161,10 +131,10 @@ export default {
     this.fetchData()
   },
   watch: {
-    list1 () {
-      for (let i = 0; i < this.list1.length; i++) {
-        if (this.list1[i].status !== 'backlog') {
-          task.doc(`${this.list1[i].id}`).update({
+    'masterData.list1' () {
+      for (let i = 0; i < this.masterData.list1.length; i++) {
+        if (this.masterData.list1[i].status !== 'backlog') {
+          task.doc(`${this.masterData.list1[i].id}`).update({
             status: 'backlog'
           })
             .then(function () {
@@ -176,10 +146,10 @@ export default {
         }
       }
     },
-    list2 () {
-      for (let i = 0; i < this.list2.length; i++) {
-        if (this.list2[i].status !== 'todo') {
-          task.doc(`${this.list2[i].id}`).update({
+  'masterData.list2' () {
+      for (let i = 0; i < this.masterData.list2.length; i++) {
+        if (this.masterData.list2[i].status !== 'todo') {
+          task.doc(`${this.masterData.list2[i].id}`).update({
             status: 'todo'
           })
             .then(function () {
@@ -191,10 +161,10 @@ export default {
         }
       }
     },
-    list3 () {
-      for (let i = 0; i < this.list3.length; i++) {
-        if (this.list3[i].status !== 'doing') {
-          task.doc(`${this.list3[i].id}`).update({
+  'masterData.list3' () {
+      for (let i = 0; i < this.masterData.list3.length; i++) {
+        if (this.masterData.list3[i].status !== 'doing') {
+          task.doc(`${this.masterData.list3[i].id}`).update({
             status: 'doing'
           })
             .then(function () {
@@ -206,10 +176,10 @@ export default {
         }
       }
     },
-    list4 () {
-      for (let i = 0; i < this.list4.length; i++) {
-        if (this.list4[i].status !== 'done') {
-          task.doc(`${this.list4[i].id}`).update({
+    'masterData.list4' () {
+      for (let i = 0; i < this.masterData.list4.length; i++) {
+        if (this.masterData.list4[i].status !== 'done') {
+          task.doc(`${this.masterData.list4[i].id}`).update({
             status: 'done'
           })
             .then(function () {

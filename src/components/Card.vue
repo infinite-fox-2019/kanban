@@ -1,15 +1,18 @@
 <template>
 
-    <b-card style="color:black" header="Default" class="text-center">
-      <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-      <b-button variant="danger">Delete</b-button>
+    <b-card style="color:black" :header="data.title" class="text-center mb-3">
+      <b-card-text>{{data.description}}</b-card-text>
+      <b-button variant="danger" @click.prevent="deleteData(data.id)">Delete</b-button>
     </b-card>
 
 </template>
 
 <script>
 export default {
-
+  name:"Card",
+  props:['data']
+    
+  
 }
 </script>
 
