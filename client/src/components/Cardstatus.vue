@@ -4,11 +4,11 @@
       <b-card
         :header="title"
         header-text-variant="white"
-        header-bg-variant="primary"
+        :header-bg-variant="variant"
       >
-        <draggable class="list-group" :list="list" group="people" @change="log">
+        <draggable class="list-group" :list="list" group="people">
           <div v-for="task in list" :key="task.title">
-            <Card :task="task" />
+            <Card :task="task" @delete="delTask"/>
           </div>
         </draggable>
       </b-card>
@@ -28,22 +28,12 @@ export default {
   },
   props: [
     'title',
-    'list'
+    'list',
+    'variant'
   ],
   methods: {
-    add: function () {
-      this.list.push({ name: 'Juan' })
-    },
-    replace: function () {
-      this.list = [{ name: 'Edgard' }]
-    },
-    clone: function (el) {
-      return {
-        name: el.name + ' cloned'
-      }
-    },
-    log: function (evt) {
-      window.console.log(evt)
+    delTask (id) {
+      this.$emit('delete', id)
     }
   }
 }

@@ -1,33 +1,8 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/kanban">Kanban</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
-
-<script>
-// import db from '../config/firestore'
-
-export default {
-  created () {
-    // db.collection('users').add({
-    //   first: 'Ada',
-    //   last: 'Lovelace',
-    //   born: 1815
-    // })
-    //   .then(function (docRef) {
-    //     console.log('Document written with ID: ', docRef.id)
-    //   })
-    //   .catch(function (error) {
-    //     console.error('Error adding document: ', error)
-    //   })
-  }
-}
-</script>
 
 <style>
 #app {
