@@ -12,6 +12,7 @@
     "bootstrap-vue": "^2.0.4",
     "core-js": "^2.6.5",
     "firebase": "^7.2.0",
+    "sweetalert2": "^8.18.5",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuedraggable": "^2.23.2"
