@@ -40,8 +40,8 @@
                       <br>
                       <b-card-body>Point Task :{{ item.point }}</b-card-body>
                       <b-button variant="danger" @click.prevent="removeItem(item.id)">Delete</b-button>
-                      <b-button variant="light" class="btn" @click.prevent="ToDo(item.id)">ToDo</b-button>
-                      <b-button variant="light" class="btn" @click.prevent="Done(item.id)">Done</b-button>
+                      <b-button variant="light" class="btn btn-default" @click.prevent="ToDo(item.id)">ToDo</b-button>
+                      <b-button variant="light" class="btn btn-default" @click.prevent="Done(item.id)">Done</b-button>
                   </b-card-title>
               </b-card>
           </b-card>
@@ -64,7 +64,7 @@
                       <br>
                       <b-card-body>Point Task :{{ item.point }}</b-card-body>
                       <b-button variant="danger" class="btn" @click.prevent="removeItem(item.id)">Delete</b-button>
-                      <b-button variant="light" class="btn" @click.prevent="onProgress(item.id)">On Progress</b-button>
+                      <b-button variant="light" class="btn btn-default" @click.prevent="onProgress(item.id)">On Progress</b-button>
                   </b-card-title>
               </b-card>
           </b-card>
@@ -76,6 +76,7 @@
 
 <script>
 import db from '../config/firestore'
+import swal from 'sweetalert2'
 export default {
   data: () => {
     return {
@@ -86,11 +87,22 @@ export default {
   },
   methods: {
     onProgress (id) {
+      swal.fire({
+        title: 'Updating Task',
+        showConfirmButton: false,
+        allowOutsideClick: () => swal.isLoading()
+      })
       db.collection('lists').doc(id)
         .update({
           status: 'OnProgress'
         })
         .then(result => {
+          swal.close()
+          swal.fire({
+            title: 'Update Success',
+            type: 'success',
+            timer: 2000
+          })
           console.log(result)
         })
         .catch(err => {
@@ -98,11 +110,22 @@ export default {
         })
     },
     Done (id) {
+      swal.fire({
+        title: 'Updating Task',
+        showConfirmButton: false,
+        allowOutsideClick: () => swal.isLoading()
+      })
       db.collection('lists').doc(id)
         .update({
           status: 'Done'
         })
         .then(result => {
+          swal.close()
+          swal.fire({
+            title: 'Update Success',
+            type: 'success',
+            timer: 2000
+          })
           console.log(result)
         })
         .catch(err => {
@@ -110,11 +133,22 @@ export default {
         })
     },
     ToDo (id) {
+      swal.fire({
+        title: 'Updating Task',
+        showConfirmButton: false,
+        allowOutsideClick: () => swal.isLoading()
+      })
       db.collection('lists').doc(id)
         .update({
           status: 'ToDo'
         })
         .then(result => {
+          swal.close()
+          swal.fire({
+            title: 'Update Success',
+            type: 'success',
+            timer: 2000
+          })
           console.log(result)
         })
         .catch(err => {
@@ -122,13 +156,58 @@ export default {
         })
     },
     removeItem (id) {
-      db.collection('lists').doc(id)
-        .delete()
+      let swalWithBootstrapButtons = swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
+      swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      })
         .then(result => {
-          console.log(result)
+          if (result.value) {
+            db.collection('lists').doc(id)
+              .delete()
+              .then(result => {
+                swalWithBootstrapButtons.fire(
+                  'Deleted!',
+                  'Your Task has been deleted.',
+                  'success',
+                  2000
+                )
+              })
+              .catch(() => {
+                swal.fire({
+                  type: 'error',
+                  title: "You're unauthorize to delete this Task",
+                  showConfirmButton: false,
+                  timer: 2000
+                })
+              })
+          } else {
+            swalWithBootstrapButtons.fire(
+              'Cancelled',
+              'Your Task is safe :)',
+              'error'
+            )
+          }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
+          swal.close()
+          swal.fire({
+            type: 'error',
+            title: 'Failed deleting',
+            showConfirmButton: false,
+            timer: 2000
+          })
         })
     }
   },

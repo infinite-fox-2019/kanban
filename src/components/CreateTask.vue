@@ -1,6 +1,6 @@
 <template>
-  <div class="container clickable card">
-    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
+  <div>
+    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show" id="formCreate">
       <b-form-group
         label="Title"
       >
@@ -76,5 +76,9 @@ export default {
 </script>
 
 <style>
-
+#formCreate {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
 </style>
