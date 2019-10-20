@@ -11,16 +11,29 @@
         <b-card-text><small>Assigned To:: {{ getDone.assigned }}</small></b-card-text>
     </div>
     </div>
-    <b-button href="#" variant="primary" class='detail'>Show Detail</b-button>
+    <Action :take-id='getDone.id' :take-name='getDone.name' @sendchangeleft='takeleft' @sendchangeright='takeright'/>
     </b-card>
 </template>
 
 <script>
+import Action from './actions/Action'
+
 export default {
-  props: ['getDone']
+  props: ['getDone'],
+  components: {
+    Action
+  },
+  methods: {
+    takeleft (name) {
+      this.$emit('sendchangeleftoparent', name)
+    },
+    takeright (name) {
+      this.$emit('sendchangerightoparent', name)
+    }
+  }
 }
 </script>
 
-<style>
+<style lang='scss'>
 
 </style>

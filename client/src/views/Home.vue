@@ -1,19 +1,19 @@
 <template>
 <div>
-  <Nav />
+  <Nav @sendtoparrent='getfromchild'/>
   <div class='home'>
     <div class="row">
       <div class="col-3">
-        <Backlog :fetchBacklog='backlogs'/>
+        <Backlog :fetchBacklog='backlogs' @sendleftobigparent='bigParentGotleft' @sendrightobigparent='bigParentGitright'/>
       </div>
       <div class="col-3">
-        <Todo :fetchTodos='todos'/>
+        <Todo :fetchTodos='todos' @sendleftobigparent='bigParentGotleft' @sendrightobigparent='bigParentGitright'/>
       </div>
       <div class="col-3">
-        <Doing :fetchDoing='doing'/>
+        <Doing :fetchDoing='doing' @sendleftobigparent='bigParentGotleft' @sendrightobigparent='bigParentGitright'/>
       </div>
       <div class="col-3">
-        <Done :fetchDone='done'/>
+        <Done :fetchDone='done' @sendleftobigparent='bigParentGotleft' @sendrightobigparent='bigParentGitright'/>
       </div>
     </div>
   </div>
@@ -46,6 +46,20 @@ export default {
       doing: '',
       done: ''
 
+    }
+  },
+  methods: {
+    getfromchild (data) {
+      this.backlogs = data
+    },
+    bigParentGotleft (name) {
+      console.log(name)
+      if (name !== 'backlog') {
+        db.collection('kamvan').update({ name: 'backlog' })
+      }
+    },
+    bigParentGitright (name) {
+      this.name = name
     }
   },
   created () {
@@ -131,7 +145,7 @@ export default {
 
 <style scoped>
 .home{
-  background-color:gold;
   padding: 15px;
+  height:200px
 }
 </style>

@@ -9,7 +9,7 @@
       >
         <draggable class="list-group" :list="fetchDone" group="people">
           <div class='main-container' v-for='(done, index) in fetchDone' :key="index">
-            <ContDone :getDone='done'/>
+            <ContDone :getDone='done' @sendchangeleftoparent='gotItChangeLeft' @sendchangerightoparent='gotItChangeRight'/>
           </div>
         </draggable>
       </b-card>
@@ -27,6 +27,12 @@ export default {
   },
   props: ['fetchDone'],
   methods: {
+    gotItChangeLeft (name) {
+      this.$emit('sendleftobigparent', name)
+    },
+    gotItChangeRight (name) {
+      this.$emit('sendrightobigparent', name)
+    }
   }
 }
 </script>

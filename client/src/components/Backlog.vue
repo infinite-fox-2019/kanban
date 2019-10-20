@@ -11,7 +11,7 @@
           <div
             class='main-container'
             v-for='(backlog, index) in fetchBacklog' :key='index'>
-            <ContBacklog :getbacklog='backlog'/>
+            <ContBacklog :getbacklog='backlog' @sendchangeleftoparent='gotItChangeLeft' @sendchangerightoparent='gotItChangeRight'/>
           </div>
         </draggable>
       </b-card>
@@ -27,7 +27,15 @@ export default {
     ContBacklog,
     draggable
   },
-  props: ['fetchBacklog']
+  props: ['fetchBacklog'],
+  methods: {
+    gotItChangeLeft (name) {
+      this.$emit('sendleftobigparent', name)
+    },
+    gotItChangeRight (name) {
+      this.$emit('sendrightobigparent', name)
+    }
+  }
 }
 </script>
 
