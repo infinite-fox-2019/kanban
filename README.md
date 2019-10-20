@@ -1,2 +1,2 @@
 # kanban
-Access the deployed app `[here](https://peregrine.satyowicaksana.online/)
+Access the deployed app: [peregrine.satyowicaksana.online](https://peregrine.satyowicaksana.online/)
