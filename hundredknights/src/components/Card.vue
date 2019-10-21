@@ -1,10 +1,10 @@
 <template>
-    <v-card>
+    <v-card class="mb-6">
         <v-toolbar flat :color="color + ' ' + 'darken-3'" dark>
-            <v-toolbar-title>asdf</v-toolbar-title>
+            <v-toolbar-title>{{detail.name}}</v-toolbar-title>
         </v-toolbar>
 
-        <v-card-text>Visit ten places on our planet that are undergoing the biggest changes today.</v-card-text>
+        <v-card-text>{{detail.description}}</v-card-text>
 
         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <template v-slot:activator="{ on }">
@@ -12,7 +12,12 @@
                     <v-btn block text small v-on="on">View</v-btn>
                 </v-footer>
             </template>
-            <EditForm @close="dialog = false" :color="color" />
+            <EditForm
+                @close="dialog = false; formKey++"
+                :key="formKey"
+                :color="color"
+                :detail="detail"
+            />
         </v-dialog>
     </v-card>
 </template>
@@ -24,10 +29,11 @@ export default {
     components: {
         EditForm
     },
-    props: ["color"],
+    props: ["color", "detail"],
     data() {
         return {
-            dialog: false
+            dialog: false,
+            formKey: 0
         };
     },
     methods: {

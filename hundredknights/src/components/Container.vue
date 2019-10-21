@@ -5,7 +5,15 @@
                 <v-btn outlined block dark>{{category}}</v-btn>
             </v-col>
             <v-col cols="12">
-                <Card :color="color" />
+                <Card v-for="(plan) in planned" :detail="plan" :key="plan.id" :color="color" />
+                <Card v-for="(work) in wip" :detail="work" :key="work.id" :color="color" />
+                <Card v-for="(test) in testing" :detail="test" :key="test.id" :color="color" />
+                <Card
+                    v-for="(complete) in completed"
+                    :detail="complete"
+                    :key="complete.id"
+                    :color="color"
+                />
             </v-col>
         </v-row>
     </v-container>
@@ -15,7 +23,7 @@
 import Card from "./Card";
 export default {
     name: "container",
-    props: ["color", "category"],
+    props: ["color", "category", "planned", "wip", "testing", "completed"],
     components: {
         Card
     }

@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-form @submit.prevent="submit">
+        <v-form @submit.prevent="submit" ref="form">
             <v-toolbar dark>
                 <v-btn icon dark @click="$emit('close')">
                     <v-icon>mdi-close</v-icon>
@@ -15,10 +15,15 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field outlined label="Name" v-model="name"></v-text-field>
+                        <v-text-field outlined label="Name" v-model="name" :rules="required"></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-textarea outlined v-model="description" label="Description"></v-textarea>
+                        <v-textarea
+                            outlined
+                            v-model="description"
+                            label="Description"
+                            :rules="required"
+                        ></v-textarea>
                     </v-col>
                     <v-col cols="12">
                         <v-select
@@ -27,6 +32,7 @@
                             dense
                             outlined
                             v-model="status"
+                            :rules="required"
                         ></v-select>
                     </v-col>
                 </v-row>
@@ -42,12 +48,24 @@ export default {
             items: ["Planned", "WIP", "Testing and Validation", "Completed"],
             status: null,
             name: "",
-            description: ""
+            description: "",
+            required: [v => !!v || "Required"]
         };
     },
     methods: {
         submit() {
-            this.$emit("close");
+            if (this.$refs.form.validate()) {
+                this.$awn.async(
+                    this.$store.dispatch("createKanBan", {
+                        name: this.name,
+                        description: this.description,
+                        status: this.status
+                    }),
+                    () => this.$emit("close"),
+                    this.next,
+                    "Saving..."
+                );
+            }
         }
     }
 };
