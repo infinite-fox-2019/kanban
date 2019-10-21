@@ -95,16 +95,10 @@ export default {
           })
         }
       })
-
-      task.doc(`${id}`).delete().then(function () {
-        console.log('Document successfully deleted!')
-      }).catch(function (error) {
-        console.error('Error removing document: ', error)
-      })
     },
     fetchData () {
       Swal.showLoading()
-      task.orderBy('createdAt', 'desc').onSnapshot((doc) => {
+      task.onSnapshot((doc) => {
         this.masterData.list1 = []
         this.masterData.list2 = []
         this.masterData.list3 = []
